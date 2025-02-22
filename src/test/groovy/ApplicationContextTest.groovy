@@ -1,22 +1,26 @@
+import di.ApplicationContext
+import di.BeanNotFoundException
+import di.DuplicateBeanException
 import spock.lang.Specification
 
 class ApplicationContextTest extends Specification {
+    class TheBean{}
     def "A bean can be registered in the application context"() {
         given: "a bean instance"
-        Object bean = new Object()
+        TheBean bean = new TheBean()
 
         when: "the bean is registered in the application context"
-        ApplicationContext.register("bean", bean)
+        ApplicationContext.register("theBean", TheBean, bean)
 
         then: "the bean is registered in the application context"
-        ApplicationContext.findBean("bean") == bean
+        ApplicationContext.findBean(TheBean) == bean
     }
 
     def "An exception is thrown if a bean is not found"() {
         when: "a nonexistent bean is queried"
-        ApplicationContext.findBean("there-is-no-bean-with-this-name")
+        ApplicationContext.findBean(Object)
 
-        then: "a BeanNotFoundException is thrown"
+        then: "a di.BeanNotFoundException is thrown"
         thrown(BeanNotFoundException)
     }
 
@@ -25,11 +29,35 @@ class ApplicationContextTest extends Specification {
         Object duplicateBean = new Object()
 
         when: "the duplicateBean is registered in the application context"
-        ApplicationContext.register("duplicateBean", duplicateBean)
-        ApplicationContext.register("duplicateBean", duplicateBean)
+        ApplicationContext.register("duplicateBean", Object, duplicateBean)
+        ApplicationContext.register("duplicateBean", Object, duplicateBean)
 
-        then: "a DuplicateBeanException is thrown"
+        then: "a di.DuplicateBeanException is thrown"
         thrown(DuplicateBeanException)
     }
+
+    def "A bean with dependencies can be instantiated, when the dependencies are already instantiated"() {
+        given: "dependencies already exist as bean instances"
+        ApplicationContext.register("dependency1", Dependency1, new Dependency1())
+        ApplicationContext.register("dependency2", Dependency2, new Dependency2())
+
+        when: "the bean with dependencies is instantiated"
+        ApplicationContext.instantiateBean("beanWithDeps", BeanWithDeps)
+
+        then: "the application context contains the new bean"
+        ApplicationContext.findBean(BeanWithDeps).class == BeanWithDeps
+    }
+
+//    def "A bean with dependencies that are a list of implementors of an interface can be instantiated"() {
+//        given: "dependencies already exist as bean instances"
+//        ApplicationContext.register("HttpServer", HttpServer, HttpServer.create())
+//        ApplicationContext.register("helloHandler", HelloHandler, new HelloHandler())
+//
+//        when: "the bean with dependencies is instantiated and a list of classes is found by their interface"
+//        ApplicationContext.instantiateBean("router", Router)
+//
+//        then: "the application context contains the new bean"
+//        ApplicationContext.findBean(Router).class == Router
+//    }
 
 }

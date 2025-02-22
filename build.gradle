@@ -11,11 +11,13 @@ repositories {
 }
 
 dependencies {
+    compileOnly('org.realityforge.org.jetbrains.annotations:org.jetbrains.annotations:1.7.0')
+
     compileOnly 'org.projectlombok:lombok:1.18.36'
     annotationProcessor 'org.projectlombok:lombok:1.18.36'
 
-    testCompileOnly 'org.projectlombok:lombok:1.18.20'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
+    testCompileOnly 'org.projectlombok:lombok:1.18.36'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.36'
 
     // spock dependencies
     testImplementation 'org.spockframework:spock-bom:2.4-M5-groovy-4.0'

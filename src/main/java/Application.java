@@ -3,6 +3,7 @@ import adapter.http.ResponseSender;
 import adapter.rest.HelloHandler;
 import adapter.rest.TimeHandler;
 import com.sun.net.httpserver.HttpServer;
+import di.ApplicationContext;
 
 import java.net.InetSocketAddress;
 import java.util.List;
@@ -22,28 +23,26 @@ public class Application {
 
         initApplicationContext();
         // TODO (jdb): this hurts, there has to be a better way to inject the dependencies of the application
-        server = (HttpServer) ApplicationContext.findBean("httpServer");
+        server = ApplicationContext.findBean("httpServer", HttpServer.class);
         Application.run();
     }
 
     private static void initApplicationContext() throws Exception {
         HttpServer httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
         httpServer.setExecutor(DEFAULT_EXECUTOR);
-        ApplicationContext.register("httpServer", httpServer);
+        ApplicationContext.register("httpServer", HttpServer.class, httpServer);
 
-        ApplicationContext.register("responseSender", new ResponseSender());
+        ApplicationContext.register("responseSender", ResponseSender.class, new ResponseSender());
 
-        ApplicationContext.register("helloHandler",
-                new HelloHandler((ResponseSender) ApplicationContext.findBean("responseSender")));
-        ApplicationContext.register("timeHandler",
-                new TimeHandler((ResponseSender) ApplicationContext.findBean("responseSender")));
+        ApplicationContext.register("helloHandler", HelloHandler.class,
+                new HelloHandler(ApplicationContext.findBean(ResponseSender.class)));
+        ApplicationContext.register("timeHandler", TimeHandler.class,
+                new TimeHandler(ApplicationContext.findBean(ResponseSender.class)));
 
-        ApplicationContext.register("router", new Router(
-                (HttpServer) ApplicationContext.findBean("httpServer"),
-                List.of(
-                        (RestHandler) ApplicationContext.findBean("helloHandler"),
-                        (RestHandler) ApplicationContext.findBean("timeHandler")
-                )));
+        ApplicationContext.register("router", Router.class, new Router(
+                ApplicationContext.findBean(HttpServer.class),
+                List.of(ApplicationContext.findBean(HelloHandler.class),
+                        ApplicationContext.findBean(TimeHandler.class))));
     }
 
     private static void run() {
