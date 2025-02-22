@@ -23,7 +23,7 @@ public class Application {
 
         initApplicationContext();
         // TODO (jdb): this hurts, there has to be a better way to inject the dependencies of the application
-        server = ApplicationContext.findBean("httpServer", HttpServer.class);
+        server = ApplicationContext.findBean(HttpServer.class);
         Application.run();
     }
 
