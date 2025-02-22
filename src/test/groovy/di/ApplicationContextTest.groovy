@@ -91,6 +91,22 @@ class ApplicationContextTest extends Specification {
         ApplicationContext.findBean(Object) instanceof Object
     }
 
+    def "A bean with dependencies should be instantiated but the dependencies do not exist"() {
+        when: "the bean with dependencies is instantiated"
+        ApplicationContext.instantiateBean("beanWithDeps", BeanWithDeps)
 
+        then: "a BeanNotFound is thrown"
+        thrown(BeanNotFoundException)
+    }
+
+    def "Beans marked by annotation '@Component' are instantiated when the package containing them is scanned"() {
+        when: "the package 'di.testbeans' is scanned"
+        ApplicationContext.scanPackage("di.testbeans")
+
+        then: "the beans found in the package are instantiated"
+        ApplicationContext.findBean(Dependency1) != null
+        ApplicationContext.findBean(Dependency2) != null
+        ApplicationContext.findBean(BeanWithDeps) != null
+    }
 
 }

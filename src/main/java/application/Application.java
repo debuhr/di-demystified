@@ -1,8 +1,5 @@
 package application;
 
-import application.adapter.http.ResponseSender;
-import application.adapter.rest.HelloHandler;
-import application.adapter.rest.TimeHandler;
 import com.sun.net.httpserver.HttpServer;
 import di.ApplicationContext;
 
@@ -16,7 +13,6 @@ public class Application {
     private static HttpServer server;
 
     public static void main(String[] args) throws Exception {
-        // TODO (jdb): refactor to finding classes extending HttpHandler on startup and querying the path from them
         // TODO (jdb): refactor to use annotations to define handlers
         // TODO (jdb): mark GET and POST handlers, maybe with annotations and reject wrong requests
         // TODO (jdb): add JSON response type (and maybe HTML or XML - something to force the code to be flexible)
@@ -31,10 +27,7 @@ public class Application {
         HttpServer httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
         httpServer.setExecutor(DEFAULT_EXECUTOR);
         ApplicationContext.register("httpServer", HttpServer.class, httpServer);
-        ApplicationContext.instantiateBean("responseSender", ResponseSender.class);
-        ApplicationContext.instantiateBean("helloHandler", HelloHandler.class);
-        ApplicationContext.instantiateBean("timeHandler", TimeHandler.class);
-        ApplicationContext.instantiateBean("router", Router.class);
+        ApplicationContext.scanPackage("application");
     }
 
     private static void run() {

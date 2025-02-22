@@ -3,11 +3,13 @@ package application.adapter.rest;
 import application.adapter.http.HttpStatus;
 import application.adapter.http.ResponseSender;
 import com.sun.net.httpserver.HttpExchange;
+import di.Component;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 
+@Component
 @RequiredArgsConstructor
 public class HelloHandler implements RestHandler {
     private final ResponseSender responseSender;

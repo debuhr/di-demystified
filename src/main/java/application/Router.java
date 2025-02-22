@@ -2,12 +2,14 @@ package application;
 
 import application.adapter.rest.RestHandler;
 import com.sun.net.httpserver.HttpServer;
+import di.Component;
 
 import java.util.List;
 
 /**
  * Routes from request paths to HttpHandler classes are defined in this class.
  */
+@Component
 public class Router {
     private final HttpServer httpServer;
     private final List<RestHandler> httpHandlers;
