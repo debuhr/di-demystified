@@ -1,3 +1,6 @@
+package adapter.rest
+
+import adapter.http.ResponseSender
 import com.sun.net.httpserver.HttpExchange
 import spock.lang.Specification
 
@@ -5,7 +8,7 @@ class HelloHandlerTest extends Specification {
     ResponseSender responseSender = new ResponseSender()
     HelloHandler helloHandler = new HelloHandler(responseSender)
 
-    def "HelloHandler returns hello message"() {
+    def "adapter.rest.HelloHandler returns hello message"() {
         given: "an HttpExchange that captures the response body in an output Stream"
         HttpExchange exchange = Mock(HttpExchange)
         ByteArrayOutputStream responseOutputStream = new ByteArrayOutputStream()

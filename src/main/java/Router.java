@@ -1,3 +1,6 @@
+import adapter.http.ResponseSender;
+import adapter.rest.HelloHandler;
+import adapter.rest.TimeHandler;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 

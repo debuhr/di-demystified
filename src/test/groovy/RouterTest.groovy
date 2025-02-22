@@ -1,3 +1,5 @@
+import adapter.http.ResponseSender
+import adapter.rest.HelloHandler
 import com.sun.net.httpserver.HttpExchange
 import com.sun.net.httpserver.HttpHandler
 import com.sun.net.httpserver.HttpServer

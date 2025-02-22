@@ -1,3 +1,6 @@
+package adapter.rest
+
+import adapter.http.ResponseSender
 import com.sun.net.httpserver.HttpExchange
 import spock.lang.Specification
 

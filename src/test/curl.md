@@ -3,3 +3,8 @@
 ```shell
 curl localhost:8000/hello
 ```
+
+## Time Endpoint
+```shell
+curl localhost:8000/time
+```

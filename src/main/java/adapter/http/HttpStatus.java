@@ -1,8 +1,10 @@
+package adapter.http;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-enum HttpStatus {
+public enum HttpStatus {
     OK(200);
 
     @Getter
