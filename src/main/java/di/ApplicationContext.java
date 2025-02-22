@@ -1,5 +1,6 @@
 package di;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
@@ -11,6 +12,7 @@ import java.util.*;
  */
 public class ApplicationContext {
     private static final Map<Class<?>, BeanInstance<?>> beans = new HashMap<>();
+    private static final BeanCreator beanCreator = new BeanCreator(ApplicationContext::findBeans);
 
     public static void clear() {
         beans.clear();
@@ -40,15 +42,15 @@ public class ApplicationContext {
 
     @SuppressWarnings("unchecked")
     private static <T> List<T> findBeans(@Nullable String name, Class<T> clazz) {
-        // TODO (jdb): if clazz is an interface, find all beans that implement that interface. still unsure if it is
-        //  better to make the interface the "type of the bean" and use it as a key, sorting the concrete classes below
+        // TODO (jdb): still unsure if it is better to make the interface the "type of the bean" and use it as a key,
+        //  sorting the concrete classes below
         if (clazz.isInterface()) {
-            return (List<T>) beans.entrySet().stream()
-                    .filter((entry ->
-                            Arrays.asList(entry.getKey().getInterfaces()).contains(clazz)))
-                    .map(Map.Entry::getValue)
-                    .map(BeanInstance::getBean)
-                    .toList();
+            List<T> beanInstances = findBeansByInterface(clazz);
+            if (beanInstances.isEmpty()) {
+                throw new BeanNotFoundException("Bean with interface:'" + clazz.getSimpleName() + "' and name: '" + name
+                                                + "' not found in application context");
+            }
+            return beanInstances;
         }
 
         // TODO (jdb): use name to disambiguate if there is more than one bean of a type
@@ -60,7 +62,18 @@ public class ApplicationContext {
         return List.of(beanInstance.getBean());
     }
 
+    @SuppressWarnings("unchecked")
+    private static <T> @NotNull List<T> findBeansByInterface(Class<T> clazz) {
+        return (List<T>) beans.entrySet().stream()
+                .filter((entry ->
+                        Arrays.asList(entry.getKey().getInterfaces()).contains(clazz)))
+                .map(Map.Entry::getValue)
+                .map(BeanInstance::getBean)
+                .toList();
+    }
+
     public static void instantiateBean(String name , Class<?> clazz) throws InvocationTargetException, InstantiationException, IllegalAccessException {
-        BeanCreator.instantiateBean(name, clazz);
+        Object bean = beanCreator.instantiateBean(clazz);
+        ApplicationContext.register(name, clazz, bean);
     }
 }

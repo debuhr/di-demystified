@@ -1,31 +1,34 @@
 package di;
 
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
-// TODO (jdb): break circular dependencies between BeanCreator and ApplicationContext
+@RequiredArgsConstructor
 class BeanCreator {
-    static void instantiateBean(String name, Class<?> clazz)
+    private final Function<Class<?>, List<?>> beanFinder;
+
+    Object instantiateBean(Class<?> clazz)
             throws InvocationTargetException, InstantiationException, IllegalAccessException {
 
         // TODO (jdb): currently this always uses the first constructor - instead, check if one exists that can be
         //  called with the types we have beans for
         Constructor<?> constructor = clazz.getDeclaredConstructors()[0];
-        Object bean = constructor.newInstance(findArguments(constructor).toArray());
-        ApplicationContext.register(name, clazz, bean);
+        return constructor.newInstance(findArguments(constructor).toArray());
     }
 
-    private static @NotNull List<Object> findArguments(Constructor<?> constructor) {
+    private @NotNull List<Object> findArguments(Constructor<?> constructor) {
         List<Object> arguments = new ArrayList<>();
         for (Parameter parameter : constructor.getParameters()) {
-            Class<?> aClass = extractActualType(parameter);
-            List<?> objects = ApplicationContext.findBeans(aClass);
-
+            Class<?> clazz = extractActualType(parameter);
+            List<?> objects = beanFinder.apply(clazz);
 
             Type type = parameter.getParameterizedType();
+            // TODO (jdb): replace list check with isAssignable
             if (type instanceof ParameterizedType parameterizedType
                 && parameterizedType.getRawType().getTypeName().equals("java.util.List")) {
                 arguments.add(objects);
@@ -36,7 +39,7 @@ class BeanCreator {
         return arguments;
     }
 
-    private static Class<?> extractActualType(Parameter parameter) {
+    private Class<?> extractActualType(Parameter parameter) {
         // TODO (jdb): is there a better way to get the class from a type (or the other way around and store the type
         //  in the map instead of the class) than Class.forName()?
         try {

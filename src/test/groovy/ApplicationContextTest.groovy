@@ -1,10 +1,9 @@
 import adapter.rest.HelloHandler
+import com.sun.net.httpserver.HttpServer
 import di.ApplicationContext
-import di.BeanCreator
 import di.BeanNotFoundException
 import di.DuplicateBeanException
 import spock.lang.Specification
-import com.sun.net.httpserver.HttpServer
 
 class ApplicationContextTest extends Specification {
     class TheBean{}
@@ -36,7 +35,7 @@ class ApplicationContextTest extends Specification {
         when: "a nonexistent bean is queried"
         ApplicationContext.findBean(Object)
 
-        then: "a di.BeanNotFoundException is thrown"
+        then: "a BeanNotFoundException is thrown"
         thrown(BeanNotFoundException)
     }
 
@@ -48,7 +47,7 @@ class ApplicationContextTest extends Specification {
         ApplicationContext.register("duplicateBean", Object, duplicateBean)
         ApplicationContext.register("duplicateBean", Object, duplicateBean)
 
-        then: "a di.DuplicateBeanException is thrown"
+        then: "a DuplicateBeanException is thrown"
         thrown(DuplicateBeanException)
     }
 
