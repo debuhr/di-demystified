@@ -1,6 +1,5 @@
 package application;
 
-import application.adapter.rest.RestHandler;
 import com.sun.net.httpserver.HttpServer;
 import di.annotation.Component;
 

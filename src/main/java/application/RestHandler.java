@@ -1,4 +1,4 @@
-package application.adapter.rest;
+package application;
 
 import com.sun.net.httpserver.HttpHandler;
 

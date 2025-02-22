@@ -4,8 +4,8 @@ import com.sun.net.httpserver.HttpServer;
 import di.annotation.Bean;
 import di.annotation.Configuration;
 
-import java.util.concurrent.Executor;
 import java.net.InetSocketAddress;
+import java.util.concurrent.Executor;
 
 @Configuration
 public class AppConfiguration {

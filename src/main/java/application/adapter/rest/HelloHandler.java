@@ -1,5 +1,6 @@
 package application.adapter.rest;
 
+import application.RestHandler;
 import application.adapter.http.HttpStatus;
 import application.adapter.http.ResponseSender;
 import com.sun.net.httpserver.HttpExchange;

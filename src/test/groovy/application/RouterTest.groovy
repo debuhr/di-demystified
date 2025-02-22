@@ -1,7 +1,6 @@
 package application
 
 
-import application.adapter.rest.RestHandler
 import application.adapter.http.ResponseSender
 import application.adapter.rest.HelloHandler
 import com.sun.net.httpserver.HttpExchange
