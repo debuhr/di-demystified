@@ -19,7 +19,7 @@ public class ApplicationContext {
         beans.clear();
     }
 
-    public static void register(String name, Class<?> clazz, Object bean) {
+    public static void register(@Nullable String name, Class<?> clazz, Object bean) {
         // TODO (jdb): make it possible to register several beans of the same class as long as the name is different
         if (beans.containsKey(clazz)) {
             throw new DuplicateBeanException("Bean with class:'" + clazz.getSimpleName() + "' and name: '" + name
