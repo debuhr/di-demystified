@@ -1,6 +1,9 @@
-import adapter.http.RestHandler
-import adapter.http.ResponseSender
-import adapter.rest.HelloHandler
+package application
+
+
+import application.adapter.rest.RestHandler
+import application.adapter.http.ResponseSender
+import application.adapter.rest.HelloHandler
 import com.sun.net.httpserver.HttpExchange
 import com.sun.net.httpserver.HttpServer
 import spock.lang.Specification
@@ -10,7 +13,7 @@ class RouterTest extends Specification {
     ResponseSender responseSender = new ResponseSender()
     HelloHandler helloHandler = new HelloHandler(responseSender)
 
-    def "Router can be created"() {
+    def "application.Router can be created"() {
         when: "a router is created"
         Router router = new Router(this.server, [helloHandler])
 
@@ -19,7 +22,7 @@ class RouterTest extends Specification {
         router != null
     }
 
-    def "Router defines routes on the server"() {
+    def "application.Router defines routes on the server"() {
         when:
         Router router = new Router(this.server, [helloHandler])
 

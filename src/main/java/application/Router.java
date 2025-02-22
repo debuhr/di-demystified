@@ -1,4 +1,6 @@
-import adapter.http.RestHandler;
+package application;
+
+import application.adapter.rest.RestHandler;
 import com.sun.net.httpserver.HttpServer;
 
 import java.util.List;

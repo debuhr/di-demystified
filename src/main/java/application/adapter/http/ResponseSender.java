@@ -1,4 +1,4 @@
-package adapter.http;
+package application.adapter.http;
 
 import com.sun.net.httpserver.HttpExchange;
 

@@ -1,12 +1,17 @@
-import adapter.rest.HelloHandler
+package di
+
+import application.Router
+import application.adapter.rest.HelloHandler
 import com.sun.net.httpserver.HttpServer
-import di.ApplicationContext
-import di.BeanNotFoundException
-import di.DuplicateBeanException
 import spock.lang.Specification
 
 class ApplicationContextTest extends Specification {
     class TheBean{}
+
+    def setup() {
+        ApplicationContext.clear()
+    }
+
     def "A bean can be registered and found in the application context"() {
         given: "a bean instance"
         TheBean bean = new TheBean()

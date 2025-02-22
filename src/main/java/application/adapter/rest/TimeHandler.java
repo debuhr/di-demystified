@@ -1,8 +1,7 @@
-package adapter.rest;
+package application.adapter.rest;
 
-import adapter.http.HttpStatus;
-import adapter.http.RestHandler;
-import adapter.http.ResponseSender;
+import application.adapter.http.HttpStatus;
+import application.adapter.http.ResponseSender;
 import com.sun.net.httpserver.HttpExchange;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

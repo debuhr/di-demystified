@@ -1,6 +1,8 @@
-import adapter.http.ResponseSender;
-import adapter.rest.HelloHandler;
-import adapter.rest.TimeHandler;
+package application;
+
+import application.adapter.http.ResponseSender;
+import application.adapter.rest.HelloHandler;
+import application.adapter.rest.TimeHandler;
 import com.sun.net.httpserver.HttpServer;
 import di.ApplicationContext;
 
@@ -37,7 +39,7 @@ public class Application {
 
     private static void run() {
         server.start();
-        System.out.printf("Application running, server listening on port %s%n", PORT);
+        System.out.printf("application.Application running, server listening on port %s%n", PORT);
     }
 
 }
