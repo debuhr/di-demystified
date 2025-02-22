@@ -10,6 +10,10 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Recursively finds annotated beans in packages. Configuration classes are found and returned as ordinary beans and
+ * any special treatment they need has to be handled by the application context.
+ */
 public class BeanScanner {
     List<Class<?>> scanPackage(String packageName) {
         return findClasses(packageName).stream()
@@ -29,7 +33,7 @@ public class BeanScanner {
         List<String> lines = reader.lines().toList();
 
         List<Class<?>> classes = findClassesInPackage(packageName, lines);
-        List<Class<?>> classesInSubpackages = findClassesInSubpackage(packageName, lines);
+        List<Class<?>> classesInSubpackages = findClassesInSubpackages(packageName, lines);
 
         classes.addAll(classesInSubpackages);
         return classes;
@@ -42,7 +46,7 @@ public class BeanScanner {
                 .collect(Collectors.toList());
     }
 
-    private @NotNull List<Class<?>> findClassesInSubpackage(String packageName, List<String> lines) {
+    private @NotNull List<Class<?>> findClassesInSubpackages(String packageName, List<String> lines) {
         return lines.stream()
                 .filter(BeanScanner::isPackageName)
                 .flatMap(maybePackage -> this.findClasses(
@@ -59,11 +63,11 @@ public class BeanScanner {
     }
 
     private static Class<?> findClassByName(String packageName, String name) {
+        String className = packageName + "." + name.substring(0, name.lastIndexOf('.'));
         try {
-            return Class.forName(packageName + "." + name.substring(0, name.lastIndexOf('.')));
+            return Class.forName(className);
         } catch (ClassNotFoundException e) {
-            // TODO (jdb): handle exception
-            throw new RuntimeException(e);
+            throw new RuntimeException("Class with name '" + className + "' not found!", e);
         }
     }
 }

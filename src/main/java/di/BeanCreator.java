@@ -8,8 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+/**
+ * Creates beans using the bean classes constructor or a factory method from a configuration class.
+ * All the low level concerns of instantiating beans using reflection are contained here.
+ */
 @RequiredArgsConstructor
 class BeanCreator {
+    private final Function<Class<?>, List<?>> beanFinder;
+
     Object createBeanFromFactoryMethod(Object configurationBean, Method method) {
         try {
             // TODO (jdb): handle bean dependencies (arguments of the factory method) the same way as below for
@@ -19,8 +25,6 @@ class BeanCreator {
             throw new RuntimeException(e);
         }
     }
-
-    private final Function<Class<?>, List<?>> beanFinder;
 
     Object instantiateBean(Class<?> clazz) {
         // TODO (jdb): currently this always uses the first constructor - instead, check if one exists that can be

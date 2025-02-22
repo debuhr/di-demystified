@@ -3,15 +3,19 @@ package application;
 import com.sun.net.httpserver.HttpServer;
 import di.ApplicationContext;
 
+/**
+ * This is the main class of the application. It initializes the application context by starting the component scan
+ * across the application package. After the application context is initialized, it starts the HTTP server.
+ */
 public class Application {
     private static HttpServer server;
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         initApplicationContext();
         Application.run();
     }
 
-    private static void initApplicationContext() throws Exception {
+    private static void initApplicationContext() {
         ApplicationContext.scanPackage("application");
         server = ApplicationContext.findBean(HttpServer.class);
     }

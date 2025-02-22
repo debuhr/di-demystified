@@ -13,12 +13,14 @@ import java.util.*;
 
 /**
  * The ApplicationContext stores information about component class instances ("beans") globally and makes the objects
- * accessible.
+ * accessible. It orchestrates the usage of other classes implementing the e.g. the creation of beans or the scanning
+ * for beans across packages and provides (together with some annotations) the API the developer uses to interact with
+ * the dependency injection system.
  */
 public class ApplicationContext {
     private static final Map<Class<?>, BeanInstance<?>> beans = new HashMap<>();
     private static final BeanCreator beanCreator = new BeanCreator(ApplicationContext::findBeans);
-    public static final BeanScanner beanScanner = new BeanScanner();
+    private static final BeanScanner beanScanner = new BeanScanner();
 
     public static void clear() {
         beans.clear();
@@ -84,26 +86,24 @@ public class ApplicationContext {
         return bean;
     }
 
+    // The first two approaches that I can think of to instantiate all beans with their dependencies and find out if
+    // there are beans with missing dependencies are:
+    // 1.
+    //   - have a list of known beans
+    //   - iterate through the list and instantiate all beans in the list whose dependencies exist as beans
+    //   - remove instantiated beans from list or have a separate list of skipped beans
+    //   - repeat, als long as the last pass reduced the number of skipped beans, i.e. actually created beans
+    //     - otherwise fail and log offending beans and missing dependencies so the developer can fix them
+    // 2.
+    //   - have a list of known beans
+    //   - start instantiating the beans from the beginning
+    //   - if a bean has dependencies, instantiate those first
+    //   - if a dependency has dependencies, instantiate those first, i.e. walk the tree
+    //   - check for cyclic dependencies while doing this
+    //   - for every new/next bean first check if it was already instantiated as a dependency
+    //
+    // This method uses approach number 1 for now, this may change in the future.
     public static void scanPackage(String packageName) {
-        // TODO (jdb): CONTINUE HERE - use BeanScanner to find all beans, then sort them by order of dependency
-        //  (bring them into an order in which they can be instantiated) and instantiate them
-
-        // The first two approaches that I can think of to instantiate all beans with their dependencies and find out if
-        // there are beans with missing dependencies are:
-        // 1.
-        //   - have a list of known beans
-        //   - iterate through the list and instantiate all beans in the list whose dependencies exist as beans
-        //   - remove instantiated beans from list or have a separate list of skipped beans
-        //   - repeat, als long as the last pass reduced the number of skipped beans, i.e. actually created beans
-        //     - otherwise fail and log offending beans and missing dependencies so the developer can fix them
-        // 2.
-        //   - have a list of known beans
-        //   - start instantiating the beans from the beginning
-        //   - if a bean has dependencies, instantiate those first
-        //   - if a dependency has dependencies, instantiate those first, i.e. walk the tree
-        //   - check for cyclic dependencies while doing this
-        //   - for every new/next bean first check if it was already instantiated as a dependency
-
         List<Class<?>> foundBeans = beanScanner.scanPackage(packageName);
         int oldNumberOfBeans;
 
@@ -131,7 +131,7 @@ public class ApplicationContext {
                 }
             } catch (BeanNotFoundException e) {
                 // TODO (jdb): it's a bit dirty to use the exception this way, needs refactoring
-                // this is normal, silence the exception
+                // this is normal, because we try to create the beans in the order they are found, silence the exception
                 skippedBeans.add(foundBean);
             }
         });
