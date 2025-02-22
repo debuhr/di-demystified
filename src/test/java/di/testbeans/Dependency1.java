@@ -1,6 +1,6 @@
 package di.testbeans;
 
-import di.Component;
+import di.annotation.Component;
 
 @Component
 public class Dependency1 {

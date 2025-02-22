@@ -3,7 +3,7 @@ package application.adapter.rest;
 import application.adapter.http.HttpStatus;
 import application.adapter.http.ResponseSender;
 import com.sun.net.httpserver.HttpExchange;
-import di.Component;
+import di.annotation.Component;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

@@ -1,9 +1,14 @@
 package di;
 
+import di.annotation.Bean;
+import di.annotation.Configuration;
+import di.exception.BeanNotFoundException;
+import di.exception.DuplicateBeanException;
+import di.exception.MultipleBeansException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 
 /**
@@ -73,9 +78,10 @@ public class ApplicationContext {
                 .toList();
     }
 
-    public static void instantiateBean(String name, Class<?> clazz) throws InvocationTargetException, InstantiationException, IllegalAccessException {
+    public static Object instantiateBean(String name, Class<?> clazz) {
         Object bean = beanCreator.instantiateBean(clazz);
         ApplicationContext.register(name, clazz, bean);
+        return bean;
     }
 
     public static void scanPackage(String packageName) {
@@ -118,17 +124,29 @@ public class ApplicationContext {
         List<Class<?>> skippedBeans = new ArrayList<>();
         foundBeans.forEach(foundBean -> {
             try {
-                Object bean = beanCreator.instantiateBean(foundBean);
-                register(null, foundBean, bean);
+                if (foundBean.isAnnotationPresent(Configuration.class)) {
+                    instantiateConfigurationClass(foundBean);
+                } else {
+                    instantiateBean(null, foundBean);
+                }
             } catch (BeanNotFoundException e) {
                 // TODO (jdb): it's a bit dirty to use the exception this way, needs refactoring
                 // this is normal, silence the exception
                 skippedBeans.add(foundBean);
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         });
         return skippedBeans;
+    }
+
+    private static void instantiateConfigurationClass(Class<?> clazz) {
+        Object configurationBean = instantiateBean(clazz.getSimpleName(), clazz);
+        Method[] declaredMethods = clazz.getDeclaredMethods();
+        Arrays.stream(declaredMethods)
+                .filter(method -> method.isAnnotationPresent(Bean.class))
+                .forEach(method -> {
+                    Object bean = beanCreator.createBeanFromFactoryMethod(configurationBean, method);
+                    register(method.getName(), method.getReturnType(), bean);
+                });
     }
 
 }

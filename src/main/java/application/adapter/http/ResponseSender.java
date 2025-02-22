@@ -1,7 +1,7 @@
 package application.adapter.http;
 
 import com.sun.net.httpserver.HttpExchange;
-import di.Component;
+import di.annotation.Component;
 
 import java.io.IOException;
 import java.io.OutputStream;

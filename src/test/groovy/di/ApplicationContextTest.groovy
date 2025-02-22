@@ -3,6 +3,8 @@ package di
 import application.Router
 import application.adapter.rest.HelloHandler
 import com.sun.net.httpserver.HttpServer
+import di.exception.BeanNotFoundException
+import di.exception.DuplicateBeanException
 import di.testbeans.BeanWithDeps
 import di.testbeans.Dependency1
 import di.testbeans.Dependency2
@@ -107,6 +109,14 @@ class ApplicationContextTest extends Specification {
         ApplicationContext.findBean(Dependency1) != null
         ApplicationContext.findBean(Dependency2) != null
         ApplicationContext.findBean(BeanWithDeps) != null
+    }
+
+    def "Beans defined in @Configuration-class are instantiated"() {
+        when: "the package 'di.configurationclass' is scanned"
+        ApplicationContext.scanPackage("di.configurationclass")
+
+        then: "the bean Dependency1 is instantiated"
+        ApplicationContext.findBean(Dependency1) != null
     }
 
 }

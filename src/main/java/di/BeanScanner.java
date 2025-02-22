@@ -1,5 +1,7 @@
 package di;
 
+import di.annotation.Component;
+import di.annotation.Configuration;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
@@ -11,7 +13,8 @@ import java.util.stream.Collectors;
 public class BeanScanner {
     List<Class<?>> scanPackage(String packageName) {
         return findClasses(packageName).stream()
-                .filter(clazz -> clazz.getAnnotation(Component.class) != null)
+                .filter(clazz -> clazz.isAnnotationPresent(Component.class)
+                                 || clazz.isAnnotationPresent(Configuration.class))
                 .toList();
     }
 

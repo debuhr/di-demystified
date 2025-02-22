@@ -10,15 +10,27 @@ import java.util.function.Function;
 
 @RequiredArgsConstructor
 class BeanCreator {
+    Object createBeanFromFactoryMethod(Object configurationBean, Method method) {
+        try {
+            // TODO (jdb): handle bean dependencies (arguments of the factory method) the same way as below for
+            //  constructors, i.e. by finding the dependencies in the application context.
+            return method.invoke(configurationBean);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private final Function<Class<?>, List<?>> beanFinder;
 
-    Object instantiateBean(Class<?> clazz)
-            throws InvocationTargetException, InstantiationException, IllegalAccessException {
-
+    Object instantiateBean(Class<?> clazz) {
         // TODO (jdb): currently this always uses the first constructor - instead, check if one exists that can be
         //  called with the types we have beans for
         Constructor<?> constructor = clazz.getDeclaredConstructors()[0];
-        return constructor.newInstance(findArguments(constructor).toArray());
+        try {
+            return constructor.newInstance(findArguments(constructor).toArray());
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private @NotNull List<Object> findArguments(Constructor<?> constructor) {

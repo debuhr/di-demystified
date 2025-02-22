@@ -1,4 +1,4 @@
-package di;
+package di.exception;
 
 public class MultipleBeansException extends RuntimeException {
     public MultipleBeansException(String message) {

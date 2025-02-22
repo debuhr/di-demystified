@@ -1,5 +1,6 @@
 package di
 
+import di.annotation.Component
 import spock.lang.Specification
 
 class ComponentAnnotationTest extends Specification {

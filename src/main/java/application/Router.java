@@ -2,7 +2,7 @@ package application;
 
 import application.adapter.rest.RestHandler;
 import com.sun.net.httpserver.HttpServer;
-import di.Component;
+import di.annotation.Component;
 
 import java.util.List;
 

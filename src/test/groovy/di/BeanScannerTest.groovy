@@ -1,5 +1,6 @@
 package di
 
+import di.configurationclass.TestConfiguration
 import di.testbeans.BeanWithDeps
 import di.testbeans.Dependency1
 import di.testbeans.Dependency2
@@ -10,7 +11,7 @@ class BeanScannerTest extends Specification {
     BeanScanner beanScanner = new BeanScanner()
 
     def "All beans in the scanned package are found"() {
-        when: "the package testbeans is scanned"
+        when: "the package 'di.testbeans' is scanned"
         List<Class<?>> beans = beanScanner.scanPackage("di.testbeans")
 
         then: "all four beans are found"
@@ -25,6 +26,11 @@ class BeanScannerTest extends Specification {
         beans.contains(BeanInSubpackage)
     }
 
-    // TODO (jdb): can/should the bean scanner already create a structure that respects the dependencies of the beans
-    //  so that the beans can be created in order?
+    def "@Configuration-classes are found"() {
+        when: "the package 'di.configurationclass' is scanned"
+        List<Class<?>> beans = beanScanner.scanPackage("di.configurationclass")
+
+        then: "@Configuration-class 'TestConfiguration' is found"
+        beans.contains(TestConfiguration)
+    }
 }
