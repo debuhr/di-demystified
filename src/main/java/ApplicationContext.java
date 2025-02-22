@@ -10,6 +10,7 @@ public class ApplicationContext {
 
     // TODO (jdb): what information to store? is the bean name enough or do we need the class as well?
     // TODO (jdb): automatically find the depencencies of a bean from the argument names in its constructor
+    // TODO (jdb): make it possible to query all beans of the same type
 
     public static void register(String name, Object bean) {
         if (beans.containsKey(name)) {

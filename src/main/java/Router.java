@@ -1,36 +1,33 @@
-import adapter.http.ResponseSender;
-import adapter.rest.HelloHandler;
-import adapter.rest.TimeHandler;
-import com.sun.net.httpserver.HttpHandler;
+import adapter.http.RestHandler;
 import com.sun.net.httpserver.HttpServer;
+
+import java.util.List;
 
 /**
  * Routes from request paths to HttpHandler classes are defined in this class.
  */
 public class Router {
     private final HttpServer httpServer;
-    private final ResponseSender responseSender;
+    private final List<RestHandler> httpHandlers;
 
-    public Router(HttpServer httpServer, ResponseSender responseSender) {
+    public Router(HttpServer httpServer, List<RestHandler> httpHandlers) {
         this.httpServer = httpServer;
-        this.responseSender = responseSender;
+        this.httpHandlers = httpHandlers;
         initRoutes();
     }
 
     private void initRoutes() {
-        // TODO (jdb): Router creates Handler instances? This is bad - it closely couples the Router to the Handlers.
-        defineRoute("/hello", new HelloHandler(responseSender));
-        defineRoute("/time", new TimeHandler(responseSender));
+        httpHandlers.forEach(this::defineRoute);
     }
 
-    public void defineRoute(String path, HttpHandler handler) {
-        if (path == null) {
-            throw new IllegalArgumentException("Path cannot be NULL");
-        }
+    public void defineRoute(RestHandler handler) {
         if (handler == null) {
             throw new IllegalArgumentException("Handler cannot be NULL");
         }
+        if (handler.getPath() == null) {
+            throw new IllegalArgumentException("Path cannot be NULL");
+        }
 
-        httpServer.createContext(path, handler);
+        httpServer.createContext(handler.getPath(), handler);
     }
 }

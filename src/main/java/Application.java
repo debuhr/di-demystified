@@ -1,7 +1,11 @@
+import adapter.http.RestHandler;
 import adapter.http.ResponseSender;
+import adapter.rest.HelloHandler;
+import adapter.rest.TimeHandler;
 import com.sun.net.httpserver.HttpServer;
 
 import java.net.InetSocketAddress;
+import java.util.List;
 import java.util.concurrent.Executor;
 
 public class Application {
@@ -11,8 +15,6 @@ public class Application {
     private static HttpServer server;
 
     public static void main(String[] args) throws Exception {
-        // TODO (jdb): add dependency injection and refactor Application and Router to use it
-        // --
         // TODO (jdb): refactor to finding classes extending HttpHandler on startup and querying the path from them
         // TODO (jdb): refactor to use annotations to define handlers
         // TODO (jdb): mark GET and POST handlers, maybe with annotations and reject wrong requests
@@ -26,13 +28,22 @@ public class Application {
 
     private static void initApplicationContext() throws Exception {
         HttpServer httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
-        httpServer.setExecutor(DEFAULT_EXECUTOR); // TODO (jdb): this should happen during bean creation
+        httpServer.setExecutor(DEFAULT_EXECUTOR);
         ApplicationContext.register("httpServer", httpServer);
 
         ApplicationContext.register("responseSender", new ResponseSender());
+
+        ApplicationContext.register("helloHandler",
+                new HelloHandler((ResponseSender) ApplicationContext.findBean("responseSender")));
+        ApplicationContext.register("timeHandler",
+                new TimeHandler((ResponseSender) ApplicationContext.findBean("responseSender")));
+
         ApplicationContext.register("router", new Router(
                 (HttpServer) ApplicationContext.findBean("httpServer"),
-                (ResponseSender) ApplicationContext.findBean("responseSender")));
+                List.of(
+                        (RestHandler) ApplicationContext.findBean("helloHandler"),
+                        (RestHandler) ApplicationContext.findBean("timeHandler")
+                )));
     }
 
     private static void run() {

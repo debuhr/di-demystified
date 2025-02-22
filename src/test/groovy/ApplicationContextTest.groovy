@@ -1,16 +1,15 @@
-import adapter.http.ResponseSender
 import spock.lang.Specification
 
 class ApplicationContextTest extends Specification {
     def "A bean can be registered in the application context"() {
         given: "a bean instance"
-        ResponseSender responseSender = new ResponseSender()
+        Object bean = new Object()
 
         when: "the bean is registered in the application context"
-        ApplicationContext.register("responseSender", responseSender)
+        ApplicationContext.register("bean", bean)
 
         then: "the bean is registered in the application context"
-        ApplicationContext.findBean("responseSender") == responseSender
+        ApplicationContext.findBean("bean") == bean
     }
 
     def "An exception is thrown if a bean is not found"() {
@@ -21,14 +20,13 @@ class ApplicationContextTest extends Specification {
         thrown(BeanNotFoundException)
     }
 
-    // TODO (jdb): test for duplicate registration of beans with same name
     def "An exception is thrown when a bean with the same name is already registered"() {
-        given: "a bean instance"
-        Object bean = new Object()
+        given: "a duplicateBean instance"
+        Object duplicateBean = new Object()
 
-        when: "the bean is registered in the application context"
-        ApplicationContext.register("bean", bean)
-        ApplicationContext.register("bean", bean)
+        when: "the duplicateBean is registered in the application context"
+        ApplicationContext.register("duplicateBean", duplicateBean)
+        ApplicationContext.register("duplicateBean", duplicateBean)
 
         then: "a DuplicateBeanException is thrown"
         thrown(DuplicateBeanException)

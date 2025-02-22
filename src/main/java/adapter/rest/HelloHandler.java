@@ -1,17 +1,20 @@
 package adapter.rest;
 
 import adapter.http.HttpStatus;
+import adapter.http.RestHandler;
 import adapter.http.ResponseSender;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 @RequiredArgsConstructor
-public class HelloHandler implements HttpHandler {
+public class HelloHandler implements RestHandler {
     private final ResponseSender responseSender;
+
+    @Getter
+    private final String path = "/hello";
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
