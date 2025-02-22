@@ -75,4 +75,12 @@ class ApplicationContextTest extends Specification {
         ApplicationContext.findBean(Router).class == Router
     }
 
+    def "A bean *without* dependencies can be instantiated"() {
+        when: "the bean is registered in the application context"
+        ApplicationContext.instantiateBean("object", Object)
+
+        then: "the bean can be found in the application context"
+        ApplicationContext.findBean(Object) instanceof Object
+    }
+
 }

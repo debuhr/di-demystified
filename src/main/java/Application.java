@@ -1,4 +1,3 @@
-import adapter.http.RestHandler;
 import adapter.http.ResponseSender;
 import adapter.rest.HelloHandler;
 import adapter.rest.TimeHandler;
@@ -6,7 +5,6 @@ import com.sun.net.httpserver.HttpServer;
 import di.ApplicationContext;
 
 import java.net.InetSocketAddress;
-import java.util.List;
 import java.util.concurrent.Executor;
 
 public class Application {
@@ -31,18 +29,10 @@ public class Application {
         HttpServer httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
         httpServer.setExecutor(DEFAULT_EXECUTOR);
         ApplicationContext.register("httpServer", HttpServer.class, httpServer);
-
-        ApplicationContext.register("responseSender", ResponseSender.class, new ResponseSender());
-
-        ApplicationContext.register("helloHandler", HelloHandler.class,
-                new HelloHandler(ApplicationContext.findBean(ResponseSender.class)));
-        ApplicationContext.register("timeHandler", TimeHandler.class,
-                new TimeHandler(ApplicationContext.findBean(ResponseSender.class)));
-
-        ApplicationContext.register("router", Router.class, new Router(
-                ApplicationContext.findBean(HttpServer.class),
-                List.of(ApplicationContext.findBean(HelloHandler.class),
-                        ApplicationContext.findBean(TimeHandler.class))));
+        ApplicationContext.instantiateBean("responseSender", ResponseSender.class);
+        ApplicationContext.instantiateBean("helloHandler", HelloHandler.class);
+        ApplicationContext.instantiateBean("timeHandler", TimeHandler.class);
+        ApplicationContext.instantiateBean("router", Router.class);
     }
 
     private static void run() {
