@@ -6,7 +6,7 @@ class ApplicationTest extends Specification {
         Application application = new Application()
 
         when: "the Application is started"
-        application.run()
+        application.main()
 
         then: "no exception is thrown"
         noExceptionThrown()

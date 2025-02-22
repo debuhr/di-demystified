@@ -8,12 +8,11 @@ import com.sun.net.httpserver.HttpServer;
  * Routes from request paths to HttpHandler classes are defined in this class.
  */
 public class Router {
-    // Dependencies
-    private final HttpServer server;
+    private final HttpServer httpServer;
     private final ResponseSender responseSender;
 
-    public Router(HttpServer server, ResponseSender responseSender) {
-        this.server = server;
+    public Router(HttpServer httpServer, ResponseSender responseSender) {
+        this.httpServer = httpServer;
         this.responseSender = responseSender;
         initRoutes();
     }
@@ -32,6 +31,6 @@ public class Router {
             throw new IllegalArgumentException("Handler cannot be NULL");
         }
 
-        server.createContext(path, handler);
+        httpServer.createContext(path, handler);
     }
 }

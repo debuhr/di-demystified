@@ -16,7 +16,6 @@ public class HelloHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String response = "Hello, this is a simple HTTP server response!\n\n";
-        exchange.sendResponseHeaders(200, response.getBytes(StandardCharsets.UTF_8).length);
         responseSender.sendResponse(exchange, response, HttpStatus.OK);
     }
 }
