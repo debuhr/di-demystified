@@ -76,4 +76,7 @@ public class ApplicationContext {
         Object bean = beanCreator.instantiateBean(clazz);
         ApplicationContext.register(name, clazz, bean);
     }
+
+    // TODO (jdb): CONTINUE HERE - use BeanScanner to find all beans, then sort them by order of dependency
+    //  (bring them into an order in which they can be intantiated) and intstantiate them
 }

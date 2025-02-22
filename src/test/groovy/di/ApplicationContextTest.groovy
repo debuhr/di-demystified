@@ -3,6 +3,9 @@ package di
 import application.Router
 import application.adapter.rest.HelloHandler
 import com.sun.net.httpserver.HttpServer
+import di.testbeans.BeanWithDeps
+import di.testbeans.Dependency1
+import di.testbeans.Dependency2
 import spock.lang.Specification
 
 class ApplicationContextTest extends Specification {
@@ -87,5 +90,7 @@ class ApplicationContextTest extends Specification {
         then: "the bean can be found in the application context"
         ApplicationContext.findBean(Object) instanceof Object
     }
+
+
 
 }
