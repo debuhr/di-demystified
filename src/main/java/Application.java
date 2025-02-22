@@ -19,7 +19,8 @@ public class Application {
 
     public static void run() throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);
-        Router router = new Router(server);
+        ResponseSender responseSender = new ResponseSender();
+        Router router = new Router(server, responseSender);
 
         server.setExecutor(DEFAULT_EXECUTOR);
         server.start();

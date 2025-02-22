@@ -7,15 +7,18 @@ import com.sun.net.httpserver.HttpServer;
 public class Router {
     // Dependencies
     private final HttpServer server;
+    private final ResponseSender responseSender;
 
-    public Router(HttpServer server) {
+    public Router(HttpServer server, ResponseSender responseSender) {
         this.server = server;
+        this.responseSender = responseSender;
         initRoutes();
     }
 
     private void initRoutes() {
         // TODO (jdb): Router creates Handler instances? This is bad - it closely couples the Router to the Handlers.
-        defineRoute("/hello", new HelloHandler());
+        defineRoute("/hello", new HelloHandler(responseSender));
+        defineRoute("/time", new TimeHandler(responseSender));
     }
 
     public void defineRoute(String path, HttpHandler handler) {

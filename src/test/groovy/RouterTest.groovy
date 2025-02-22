@@ -5,10 +5,11 @@ import spock.lang.Specification
 
 class RouterTest extends Specification {
     HttpServer server = Mock(HttpServer)
+    ResponseSender responseSender = new ResponseSender()
 
     def "Router can be created"() {
         when: "a router is created"
-        Router router = new Router(this.server)
+        Router router = new Router(this.server, responseSender)
 
         then: "the instance can be created"
         noExceptionThrown()
@@ -17,7 +18,7 @@ class RouterTest extends Specification {
 
     def "Router defines routes on the server"() {
         when:
-        Router router = new Router(this.server)
+        Router router = new Router(this.server, responseSender)
 
         then:
         1 * server.createContext("/hello", _ as HelloHandler)
@@ -35,7 +36,7 @@ class RouterTest extends Specification {
         def lukeHandler = new LukeHandler()
 
         when:
-        Router router = new Router(this.server)
+        Router router = new Router(this.server, responseSender)
         router.defineRoute("/aNewHope", lukeHandler)
 
         then:
@@ -44,7 +45,7 @@ class RouterTest extends Specification {
 
     def "It is not possible to define a handler for a null path"() {
         when: "null is given as a path"
-        Router router = new Router(this.server)
+        Router router = new Router(this.server, responseSender)
         router.defineRoute(null, new LukeHandler())
 
         then: "an exception is thrown"
@@ -53,7 +54,7 @@ class RouterTest extends Specification {
 
     def "It is not possible to define a null handler"() {
         when: "null is given as a handler"
-        Router router = new Router(this.server)
+        Router router = new Router(this.server, responseSender)
         router.defineRoute("/aNewHope", null)
 
         then: "an exception is thrown"
