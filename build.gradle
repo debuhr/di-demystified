@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+    id 'groovy'
+}
+
+group = 'de.outdoorjoes'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.20'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
+
+    // spock dependencies
+    testImplementation 'org.spockframework:spock-bom:2.4-M5-groovy-4.0'
+    testImplementation 'org.spockframework:spock-core:2.4-M5-groovy-4.0'
+    testImplementation 'org.spockframework:spock-junit4:2.4-M5-groovy-4.0'
+    testImplementation 'org.apache.groovy:groovy:4.0.24'
+    testImplementation 'net.bytebuddy:byte-buddy:1.11.18'
+    testImplementation 'org.objenesis:objenesis:3.2'
+
+    // junit
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
