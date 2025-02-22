@@ -1,7 +1,6 @@
 package application.adapter.rest
 
 import application.adapter.http.ResponseSender
-import application.adapter.rest.TimeHandler
 import com.sun.net.httpserver.HttpExchange
 import spock.lang.Specification
 
