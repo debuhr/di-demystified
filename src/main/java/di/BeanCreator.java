@@ -49,7 +49,7 @@ class BeanCreator {
                 && parameterizedType.getRawType().getTypeName().equals("java.util.List")) {
                 arguments.add(objects);
             } else {
-                arguments.add(objects.getFirst());
+                arguments.add(objects.get(0));
             }
         }
         return arguments;

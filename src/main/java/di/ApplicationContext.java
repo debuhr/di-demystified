@@ -41,7 +41,7 @@ public class ApplicationContext {
             throw new MultipleBeansException("Found multiple matching beans for class:'" + clazz.getSimpleName()
                                              + "', disambiguate by supplying a bean name!");
         }
-        return beanList.getFirst();
+        return beanList.get(0);
     }
 
     public static <T> List<T> findBeans(Class<T> clazz) {
