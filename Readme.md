@@ -1,6 +1,6 @@
 # Java-Rest & Demystifying Dependency Injection
 The code in this repository is very unpolished and not production ready in any way.
-It is however, IMHO interesting. The purpose of this code is to demonstrate with minimal effort, that there is no magic
+It is however, IMHO, interesting. The purpose of this code is to demonstrate with minimal effort, that there is no magic
 to dependency injection.
 
 This was written for a presentation that I held with the goal of showing that the form of dependency injection that is
@@ -23,11 +23,15 @@ annotation based dependency injection.
 
 # Architecture
 The DI framework lives in the `di` folder.
-The application is in the `application` folder and is divided into a domain directory that serves to demonstrate that 
-the DI framework can be used to apply dependency inversion. The `adapter` package contains the parts external to the 
-domain in the sense of the *ports and adapters* architecture.
+
+The application is in the `application` folder and is divided into a `domain` directory that serves to demonstrate that 
+the DI framework can be used to apply dependency inversion, and an `adapter` package containing the parts external to 
+the domain in the sense of the *ports and adapters* architecture.
+
 The `Application` class is the main class of the application and is used to run it (i.e. it contains the `main`-method).
+
 The `Router` class creates the routes in the HttpContext when it is created.
+
 The `AppConfiguration` class is a configuration class that can be used to create beans that cannot be created by using 
-annotations, e.g. an instance of a class from a dependency that we cannot change. In this case, it creates an instance 
+annotations, e.g. an instance of a class from a dependency that we cannot change. In this case, it creates an instance
 of `HttpServer`.
