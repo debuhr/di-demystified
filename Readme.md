@@ -35,3 +35,7 @@ The `Router` class creates the routes in the HttpContext when it is created.
 The `AppConfiguration` class is a configuration class that can be used to create beans that cannot be created by using 
 annotations, e.g. an instance of a class from a dependency that we cannot change. In this case, it creates an instance
 of `HttpServer`.
+
+# Usage
+Go through the commits starting from the initial commit and watch a small dependency injection "framework" grow around 
+a simple http api and read the tests and the new code in each commit.
